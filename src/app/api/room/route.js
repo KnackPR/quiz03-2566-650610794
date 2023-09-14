@@ -2,36 +2,49 @@ import { DB, readDB, writeDB } from "@/app/libs/DB";
 import { checkToken } from "@/app/libs/checkToken";
 import { nanoid } from "nanoid";
 import { NextResponse } from "next/server";
+import jwt from "jsonwebtoken"
 
 export const GET = async () => {
-  readDB();
+  // let roomCount = 0;
+  // readDB();
+  // const foundRooms = DB.rooms.find((x) => x.roomId === roomId)
+  // if (foundRooms)
+  //   roomCount++;
+  //อ่านไฟล์ไม่ได้เลยครับ
   return NextResponse.json({
     ok: true,
-    //rooms:
-    //totalRooms:
+    rooms: DB.rooms,
+    // totalRooms: roomCount,
   });
 };
 
 export const POST = async (request) => {
   const payload = checkToken();
+  role = payload.role
 
-  // return NextResponse.json(
-  //   {
-  //     ok: false,
-  //     message: "Invalid token",
-  //   },
-  //   { status: 401 }
-  // );
+  try {
+  } catch {
+    return NextResponse.json(
+      {
+        ok: false,
+        message: "Invalid token",
+      },
+      { status: 401 }
+    );
+  }
 
+
+  const body = await request.json();
+  const { roomName } = body;
   readDB();
-
-  // return NextResponse.json(
-  //   {
-  //     ok: false,
-  //     message: `Room ${"replace this with room name"} already exists`,
-  //   },
-  //   { status: 400 }
-  // );
+  const foundRoom = DB.rooms.find((x) => x.roomName === roomName);
+  return NextResponse.json(
+    {
+      ok: false,
+      message: `Room ${foundRoom} already exists`,
+    },
+    { status: 400 }
+  );
 
   const roomId = nanoid();
 
